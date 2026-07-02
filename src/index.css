@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;500;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Cormorant Garamond", serif;
+  --font-display: "Cinzel", serif;
+  --font-decorative: "Cinzel Decorative", serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  /* Bold Typography and House Colors */
+  --color-gold: #d4af37;
+  --color-gold-hover: #b8901c;
+  --color-gold-theme: #c4a45a;
+  --color-gold-subtle: #8b7344;
+  --color-gold-gradient-start: #f3e5ab;
+  --color-dark-bg: #0a0b0d;
+  --color-dark-card: #111317;
+  --color-dark-border: #2a2d33;
+  --color-dark-frame: #1a1c20;
+  
+  --color-stark-bg: #111827;
+  --color-stark-accent: #38bdf8;
+  
+  --color-targaryen-bg: #090303;
+  --color-targaryen-accent: #dc2626;
+  
+  --color-lannister-bg: #2d0606;
+  --color-lannister-accent: #fbbf24;
+  
+  --color-night-bg: #030712;
+  --color-night-accent: #64748b;
+}
+
+/* Medieval Scroll / Parchment Style Utilities */
+.parchment-bg {
+  background-color: #f5eedc;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(220,205,170,0.35) 100%),
+                    repeating-linear-gradient(45deg, rgba(139,115,85,0.03) 0px, rgba(139,115,85,0.03) 2px,transparent 2px, transparent 10px),
+                    repeating-linear-gradient(-45deg, rgba(139,115,85,0.03) 0px, rgba(139,115,85,0.03) 2px,transparent 2px, transparent 10px);
+  border: 1px solid #c2ac82;
+  box-shadow: inset 0 0 35px rgba(139,115,85,0.22), 0 10px 25px rgba(0,0,0,0.35);
+}
+
+.parchment-border {
+  border: 6px double #8a6d3b;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.95);
+}
+::-webkit-scrollbar-thumb {
+  background: #272d3d;
+  border: 2px solid rgba(15, 23, 42, 0.95);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
+/* Text selections */
+::selection {
+  background-color: #d4af37;
+  color: #111111;
+}
+
+/* Stone Background Effects */
+.stone-texture {
+  background-color: #0a0b0d;
+  background-image: radial-gradient(circle at 50% 50%, rgba(20, 22, 26, 0.4) 0%, rgba(10, 11, 13, 0.98) 100%),
+                    linear-gradient(rgba(196, 164, 90, 0.015) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(196, 164, 90, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+}
+
+/* Bold Typography Theme Styles */
+.bold-header-title {
+  font-family: "Cinzel", serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  background: linear-gradient(to bottom, #f3e5ab 0%, #c4a45a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bold-section-title {
+  font-family: "Cinzel", serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  border-bottom: 2px solid #c4a45a;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: #f3e5ab;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.ornamental-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #c4a45a, transparent);
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+.parchment-bg {
+  background-color: #111317;
+  border: 1px solid #2a2d33;
+}
+.parchment-bg:hover {
+  border-color: #c4a45a;
+}
+
+/* Iron-like borders */
+.iron-border {
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55), inset 0 0 15px rgba(0,0,0,0.85);
+}
+
+.iron-border-accent {
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.12), inset 0 0 8px rgba(212, 175, 55, 0.08);
+}
+
+/* Golden text and borders */
+.gold-text {
+  background: linear-gradient(135deg, #fff2d4 0%, #d4af37 50%, #aa841c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border {
+  border: 1px solid #d4af37;
+}
+
+/* Animated fire sparks / embers */
+@keyframes embers {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-120px) rotate(360deg) scale(0.2);
+    opacity: 0;
+  }
+}
+
+.ember {
+  position: absolute;
+  background: radial-gradient(circle, #ff5722 0%, #ffc107 80%);
+  border-radius: 50%;
+  animation: embers 3.5s infinite linear;
+  pointer-events: none;
+}
+
+/* Animated wind / ice drifts */
+@keyframes wind-drift {
+  0% {
+    transform: translateX(-100%) translateY(0) skewX(-20deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.25;
+  }
+  80% {
+    opacity: 0.25;
+  }
+  100% {
+    transform: translateX(100%) translateY(-15px) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+.snow-wind {
+  position: absolute;
+  background: linear-gradient(90deg, transparent, rgba(224, 242, 254, 0.25), transparent);
+  height: 1px;
+  width: 100%;
+  animation: wind-drift 9s infinite linear;
+  pointer-events: none;
+}
