@@ -202,7 +202,7 @@ export const Rookery: React.FC<RookeryProps> = ({ activeHouse, accentColor }) =>
             {/* Top wood roller decoration */}
             <div className="h-4 bg-amber-950 w-full" />
 
-            <div className="p-6 md:p-10 parchment-border space-y-6">
+            <div className="p-5 sm:p-8 md:p-10 parchment-border space-y-6">
               
               <div className="flex items-center gap-2 mb-2 border-b border-amber-900/20 pb-3">
                 <Scroll className="w-5 h-5 text-amber-900" />

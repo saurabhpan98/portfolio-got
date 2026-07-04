@@ -57,7 +57,7 @@ export const Chronicles: React.FC<ChroniclesProps> = ({ activeHouse, accentColor
             </div>
 
             {/* Parchment margins & content */}
-            <div className="p-8 md:p-10 parchment-border">
+            <div className="p-5 sm:p-8 md:p-10 parchment-border">
               <div className="flex items-center gap-2 mb-6">
                 <Scroll className="w-5 h-5 text-amber-900" />
                 <h3 className="font-display text-xl font-bold tracking-wide text-amber-950 uppercase border-b border-amber-900/20 pb-1 w-full">
