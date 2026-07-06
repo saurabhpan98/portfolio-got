@@ -10,6 +10,7 @@ import { RealmProjects } from './components/RealmProjects';
 import { GithubLedger } from './components/GithubLedger';
 import { LordsTestimonials } from './components/LordsTestimonials';
 import { Rookery } from './components/Rookery';
+import { DrogonFire } from './components/DrogonFire';
 import { Shield, Map, Compass, BookOpen, Send, Quote, Sparkles, Volume2, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -294,6 +295,9 @@ export default function App() {
         </div>
 
       </footer>
+
+      {/* Interactive Dragon Guardian & Dracarys Fire Breather */}
+      <DrogonFire activeHouse={activeHouse} isSoundMuted={isSoundMuted} />
     </div>
   );
 }

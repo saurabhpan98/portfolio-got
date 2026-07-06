@@ -192,3 +192,21 @@ html, body, #root {
   animation: wind-drift 9s infinite linear;
   pointer-events: none;
 }
+
+/* Dragon Roar Viewport Shaking Effect */
+@keyframes shake-moderate {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  20% { transform: translate(1px, 1px) rotate(0.5deg); }
+  30% { transform: translate(-1.5px, 0.5px) rotate(-1deg); }
+  40% { transform: translate(1.5px, -0.5px) rotate(1deg); }
+  50% { transform: translate(-1px, 1px) rotate(-0.5deg); }
+  60% { transform: translate(1px, -1px) rotate(0.5deg); }
+  70% { transform: translate(-0.5px, -0.5px) rotate(-0.2deg); }
+  80% { transform: translate(0.5px, 0.5px) rotate(0.2deg); }
+  90% { transform: translate(-1px, 0.5px) rotate(-0.5deg); }
+}
+
+.animate-shake-moderate {
+  animation: shake-moderate 0.4s infinite ease-in-out;
+}
