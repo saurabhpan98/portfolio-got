@@ -6,6 +6,7 @@ import { GreatHall } from './components/GreatHall';
 import { Chronicles } from './components/Chronicles';
 import { RoyalServices } from './components/RoyalServices';
 import { CitadelStudies } from './components/CitadelStudies';
+import { KeyAchievements } from './components/KeyAchievements';
 import { RealmProjects } from './components/RealmProjects';
 import { GithubLedger } from './components/GithubLedger';
 import { LordsTestimonials } from './components/LordsTestimonials';
@@ -143,6 +144,12 @@ export default function App() {
               Campaigns
             </button>
             <button
+              onClick={() => scrollToSection('achievements-section')}
+              className="px-1.5 py-1 md:px-2 md:py-1.5 text-stone-400 hover:text-white hover:border-b border-gold cursor-pointer transition-colors"
+            >
+              Laurels
+            </button>
+            <button
               onClick={() => scrollToSection('projects-section')}
               className="px-1.5 py-1 md:px-2 md:py-1.5 text-stone-400 hover:text-white hover:border-b border-gold cursor-pointer transition-colors"
             >
@@ -221,6 +228,12 @@ export default function App() {
 
         {/* Academic Studies & Campaigns Section (Education & Experience) */}
         <CitadelStudies 
+          activeHouse={activeHouse}
+          accentColor={currentHouseInfo.primaryColor}
+        />
+
+        {/* Key Achievements Section (Royal Honors & Laurels) */}
+        <KeyAchievements 
           activeHouse={activeHouse}
           accentColor={currentHouseInfo.primaryColor}
         />
