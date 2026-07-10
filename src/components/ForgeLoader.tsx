@@ -23,7 +23,7 @@ export const ForgeLoader: React.FC<ForgeLoaderProps> = ({ onComplete }) => {
         }
         
         // Realistic progression increments
-        const next = prev + Math.floor(Math.random() * 8) + 4;
+        const next = prev + Math.floor(Math.random() * 3) + 2;
         const bounded = Math.min(next, 100);
 
         // Update status texts based on percentage
@@ -41,7 +41,7 @@ export const ForgeLoader: React.FC<ForgeLoaderProps> = ({ onComplete }) => {
 
         return bounded;
       });
-    }, 150);
+    }, 220);
 
     return () => clearInterval(timer);
   }, [onComplete]);
