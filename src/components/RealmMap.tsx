@@ -132,51 +132,145 @@ export const RealmMap: React.FC<RealmMapProps> = ({ onScrollToSection, onNavigat
       </div>
 
       {/* Medieval Parchment Map Wrapper */}
-      <div className="relative w-full aspect-[16/10] min-h-[400px] md:min-h-[500px] lg:min-h-[600px] rounded-2xl overflow-hidden border border-amber-900/40 shadow-2xl parchment-bg p-4 md:p-8 flex flex-col justify-between">
+      <div className="relative w-full aspect-[16/10] min-h-[400px] md:min-h-[500px] lg:min-h-[600px] rounded-2xl overflow-hidden border border-amber-900/40 shadow-2xl map-water-bg p-4 md:p-8 flex flex-col justify-between">
         
+        {/* Full Interactive Landmass Vector Drawing (Glow-infused coastlines and land regions) */}
+        <svg 
+          viewBox="0 0 1600 1000" 
+          className="absolute inset-0 w-full h-full pointer-events-none select-none z-0 opacity-80"
+        >
+          <defs>
+            <linearGradient id="land-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgba(46, 125, 78, 0.85)" />
+              <stop offset="50%" stopColor="rgba(56, 142, 88, 0.78)" />
+              <stop offset="100%" stopColor="rgba(34, 101, 60, 0.88)" />
+            </linearGradient>
+            
+            <filter id="coast-glow" x="-10%" y="-10%" width="120%" height="120%">
+              <feDropShadow dx="0" dy="0" stdDeviation="10" floodColor="#d4af37" floodOpacity="0.4" />
+            </filter>
+          </defs>
+
+          {/* Westeros Continent Landmass */}
+          <path 
+            d="M 720,80 L 800,80 C 830,110 820,150 780,180 C 740,190 710,210 680,240 C 630,260 640,300 580,340 C 550,370 480,390 460,430 C 470,450 510,470 550,480 C 610,490 640,510 560,540 C 530,550 520,560 590,570 C 650,570 670,590 650,600 C 630,610 640,650 670,670 C 690,700 660,750 600,780 C 610,810 660,830 640,870 C 580,890 480,900 380,890 C 280,880 230,850 180,820 C 140,800 130,780 150,750 C 90,730 70,690 100,650 C 110,610 120,570 150,540 C 140,490 130,450 160,410 C 120,370 140,320 170,290 C 200,270 220,230 230,190 C 240,170 210,120 340,80 Z"
+            fill="url(#land-gradient)"
+            stroke="rgba(212, 175, 55, 0.6)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            filter="url(#coast-glow)"
+          />
+
+          {/* Westeros Coast Ripples */}
+          <path 
+            d="M 720,80 L 800,80 C 830,110 820,150 780,180 C 740,190 710,210 680,240 C 630,260 640,300 580,340 C 550,370 480,390 460,430 C 470,450 510,470 550,480 C 610,490 640,510 560,540 C 530,550 520,560 590,570 C 650,570 670,590 650,600 C 630,610 640,650 670,670 C 690,700 660,750 600,780 C 610,810 660,830 640,870 C 580,890 480,900 380,890 C 280,880 230,850 180,820 C 140,800 130,780 150,750 C 90,730 70,690 100,650 C 110,610 120,570 150,540 C 140,490 130,450 160,410 C 120,370 140,320 170,290 C 200,270 220,230 230,190 C 240,170 210,120 340,80 Z"
+            fill="none"
+            stroke="rgba(147, 197, 253, 0.22)"
+            strokeWidth="7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Essos Continent Landmass */}
+          <path 
+            d="M 1600,250 C 1510,240 1420,265 1340,290 C 1290,305 1255,355 1285,420 C 1295,450 1265,490 1245,530 C 1225,570 1245,630 1205,690 C 1185,720 1225,770 1255,820 L 1600,870 Z"
+            fill="url(#land-gradient)"
+            stroke="rgba(212, 175, 55, 0.6)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            filter="url(#coast-glow)"
+          />
+
+          {/* Essos Ripples */}
+          <path 
+            d="M 1600,250 C 1510,240 1420,265 1340,290 C 1290,305 1255,355 1285,420 C 1295,450 1265,490 1245,530 C 1225,570 1245,630 1205,690 C 1185,720 1225,770 1255,820 L 1600,870 Z"
+            fill="none"
+            stroke="rgba(147, 197, 253, 0.22)"
+            strokeWidth="7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Dragonstone Island */}
+          <path 
+            d="M 1060,530 C 1080,510 1100,520 1110,540 C 1120,560 1100,580 1080,570 C 1060,560 1050,540 1060,530 Z"
+            fill="rgba(239, 68, 68, 0.25)"
+            stroke="rgba(239, 68, 68, 0.65)"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Valyrian Armory Island */}
+          <path 
+            d="M 850,380 C 870,360 910,380 900,410 C 890,430 860,420 850,380 Z"
+            fill="url(#land-gradient)"
+            stroke="rgba(212, 175, 55, 0.6)"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Iron Islands */}
+          <path 
+            d="M 200,380 C 210,370 220,380 215,395 C 205,400 195,390 200,380 Z"
+            fill="url(#land-gradient)"
+            stroke="rgba(212, 175, 55, 0.6)"
+            strokeWidth="1.5"
+          />
+          <path 
+            d="M 230,375 C 240,365 245,375 240,385 C 235,390 225,385 230,375 Z"
+            fill="url(#land-gradient)"
+            stroke="rgba(212, 175, 55, 0.6)"
+            strokeWidth="1.5"
+          />
+        </svg>
+
         {/* Subtle Map Coordinates, lines, Compass Rose in bg */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none select-none">
+        <div className="absolute inset-0 opacity-30 pointer-events-none select-none z-0">
           {/* Grid lines */}
-          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, #78350f 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, rgba(196,164,90,0.18) 1.5px, transparent 1.5px)', backgroundSize: '40px 40px' }} />
           {/* Compass rose image/shape drawing */}
-          <div className="absolute right-12 bottom-12 w-48 h-48 border-2 border-dashed border-amber-950 rounded-full flex items-center justify-center">
-            <div className="absolute w-full h-[1px] bg-amber-950" />
-            <div className="absolute h-full w-[1px] bg-amber-950" />
-            <span className="absolute -top-6 text-amber-950 font-display font-bold">N</span>
-            <span className="absolute -bottom-6 text-amber-950 font-display font-bold">S</span>
-            <span className="absolute -left-6 text-amber-950 font-display font-bold">W</span>
-            <span className="absolute -right-6 text-amber-950 font-display font-bold">E</span>
+          <div className="absolute right-12 bottom-12 w-48 h-48 border-2 border-dashed border-amber-900/40 rounded-full flex items-center justify-center">
+            <div className="absolute w-full h-[1px] bg-amber-900/30" />
+            <div className="absolute h-full w-[1px] bg-amber-900/30" />
+            <span className="absolute -top-6 text-amber-500/75 font-display font-bold">N</span>
+            <span className="absolute -bottom-6 text-amber-500/75 font-display font-bold">S</span>
+            <span className="absolute -left-6 text-amber-500/75 font-display font-bold">W</span>
+            <span className="absolute -right-6 text-amber-500/75 font-display font-bold">E</span>
           </div>
         </div>
 
         {/* Hand drawn-like landscape decorations */}
         {/* Sea Monster Symbol */}
-        <div className="absolute right-1/4 top-1/4 opacity-15 pointer-events-none text-amber-950">
-          <Anchor className="w-12 h-12 rotate-45" />
-          <span className="font-decorative text-[9px] block tracking-widest uppercase mt-1">Sunset Sea</span>
+        <div className="absolute right-1/4 top-1/4 opacity-35 pointer-events-none text-amber-500/80">
+          <Anchor className="w-12 h-12 rotate-45 text-amber-600/60" />
+          <span className="font-decorative text-[9px] block tracking-widest uppercase mt-1 text-amber-600/70">Sunset Sea</span>
         </div>
 
         {/* Valyrian Sea Decorative Name */}
-        <div className="absolute left-[35%] bottom-[25%] opacity-15 pointer-events-none text-amber-950 select-none">
+        <div className="absolute left-[35%] bottom-[25%] opacity-40 pointer-events-none text-amber-600 select-none">
           <span className="font-decorative text-[11px] font-bold block tracking-[0.4em] uppercase">The Narrow Sea</span>
         </div>
 
         {/* Mountains sketch decorations (rendered using pure CSS shapes for rustic feel) */}
-        <div className="absolute left-6 top-1/3 opacity-20 pointer-events-none text-amber-950 flex gap-1">
+        <div className="absolute left-6 top-1/3 opacity-35 pointer-events-none text-amber-500/80 flex gap-1">
           <span className="text-2xl">▲</span>
           <span className="text-xl">▲</span>
           <span className="text-2xl">▲</span>
-          <span className="font-mono text-[9px] uppercase self-end tracking-wider ml-1">Frostfangs</span>
+          <span className="font-mono text-[9px] uppercase self-end tracking-wider ml-1 text-amber-500/60">Frostfangs</span>
         </div>
 
-        <div className="absolute right-[15%] bottom-[15%] opacity-20 pointer-events-none text-amber-950 flex gap-1">
+        <div className="absolute right-[15%] bottom-[15%] opacity-35 pointer-events-none text-amber-500/80 flex gap-1">
           <span className="text-2xl">▲</span>
           <span className="text-xl">▲</span>
-          <span className="font-mono text-[9px] uppercase self-end tracking-wider ml-1">Red Mountains</span>
+          <span className="font-mono text-[9px] uppercase self-end tracking-wider ml-1 text-amber-500/60">Red Mountains</span>
         </div>
 
         {/* Dotted paths connecting some key points */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20 stroke-amber-950 stroke-2 stroke-dasharray-[4,6] fill-none">
+        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40 stroke-amber-500/60 stroke-2 stroke-dasharray-[4,6] fill-none">
           {/* Winterfell to Kings Landing */}
           <path d="M 38%,22% Q 42%,40% 48%,58%" />
           {/* Kings Landing to Dragonstone */}
@@ -197,12 +291,12 @@ export const RealmMap: React.FC<RealmMapProps> = ({ onScrollToSection, onNavigat
 
         {/* Map Header details */}
         <div className="flex justify-between items-start z-10">
-          <div className="border border-amber-900/30 p-2 md:p-3 bg-amber-100/40 rounded shadow-sm max-w-[200px]">
-            <h4 className="font-display text-[10px] md:text-xs text-amber-950 uppercase font-bold tracking-widest border-b border-amber-900/20 pb-1 flex items-center gap-1.5">
-              <Compass className="w-3.5 h-3.5 text-amber-900" />
+          <div className="border border-amber-900/40 p-2 md:p-3 bg-stone-950/80 backdrop-blur rounded shadow-md max-w-[200px]">
+            <h4 className="font-display text-[10px] md:text-xs text-amber-400 uppercase font-bold tracking-widest border-b border-amber-900/30 pb-1 flex items-center gap-1.5">
+              <Compass className="w-3.5 h-3.5 text-gold" />
               Saurabh's Map
             </h4>
-            <p className="font-mono text-[8px] text-amber-900/70 mt-1 leading-normal">
+            <p className="font-mono text-[8px] text-stone-400 mt-1 leading-normal">
               Acquired from the Citadel archives. Updated 305 AC.
             </p>
           </div>
@@ -221,20 +315,20 @@ export const RealmMap: React.FC<RealmMapProps> = ({ onScrollToSection, onNavigat
             const isHovered = hoveredLocation?.id === loc.id;
             
             // Marker color scheme based on alliance
-            let markerColor = 'text-amber-900';
-            let pulseColor = 'bg-amber-900';
+            let markerColor = 'text-amber-500';
+            let pulseColor = 'bg-amber-500';
             if (loc.alliance === 'stark') {
-              markerColor = 'text-sky-700';
-              pulseColor = 'bg-sky-500';
+              markerColor = 'text-sky-400';
+              pulseColor = 'bg-sky-400';
             } else if (loc.alliance === 'targaryen') {
-              markerColor = 'text-red-700';
+              markerColor = 'text-red-500';
               pulseColor = 'bg-red-500';
             } else if (loc.alliance === 'lannister') {
-              markerColor = 'text-amber-600';
-              pulseColor = 'bg-amber-500';
+              markerColor = 'text-amber-400';
+              pulseColor = 'bg-amber-400';
             } else if (loc.alliance === 'nightswatch') {
-              markerColor = 'text-stone-700';
-              pulseColor = 'bg-stone-500';
+              markerColor = 'text-stone-300';
+              pulseColor = 'bg-stone-300';
             }
 
             return (

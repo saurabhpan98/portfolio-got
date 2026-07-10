@@ -185,9 +185,9 @@ export const ForgeLoader: React.FC<ForgeLoaderProps> = ({ onComplete }) => {
             key={sparkCount} // triggers keyframes on every strike
             initial={{ rotate: -40, y: -25, x: -10 }}
             animate={{
-              rotate: [-40, 10, -40],
-              y: [-25, 20, -25],
-              x: [-10, 5, -10],
+              rotate: [-40, 15, -40],
+              y: [-25, 54, -25],
+              x: [-10, 2, -10],
             }}
             transition={{
               duration: 0.8,
