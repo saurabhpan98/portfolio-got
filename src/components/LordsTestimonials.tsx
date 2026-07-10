@@ -65,7 +65,7 @@ const ENDORSEMENTS: Testimonial[] = [
     sigil: '📚',
     houseName: 'The Citadel of Oldtown',
     gotWords: 'Knowledge Guards the Realm',
-    scrollMessage: 'Saurabh\'s semantic search algorithms have saved the order of Maesters years of physical document searching. Finding remedies for rare sicknesses or ancient royal family trees now takes mere moments, utilizing smart AI-indexing loops. Truly, a genius of computational alchemy.',
+    scrollMessage: 'Saurabh\'s semantic search algorithms have saved the order of Maesters years of physical document searching. Finding remedies for rare sicknesses or ancient royal family trees now takes mere moments, utilizing advanced pattern indexing algorithms. Truly, a genius of computational alchemy.',
     ratingSeals: 5,
     projectCommissioned: 'The Citadel Archive Search',
     dateStamped: '304 AC'

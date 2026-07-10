@@ -103,7 +103,7 @@ export const SKILLS: Skill[] = [
     gotAnalog: 'Citadel Maester Formulas'
   },
   {
-    name: 'GenAI & LLM Integration',
+    name: 'Intelligent Systems & Text Analysis',
     category: 'lore',
     level: 4,
     gotAnalog: 'Warg Minds & Greensight'
@@ -142,11 +142,11 @@ export const PROJECTS: Project[] = [
   {
     id: 'citadel-archive-search',
     title: 'The Citadel Archive Search',
-    gotCodename: 'Scroll Weaver AI',
-    description: 'An intelligent semantic search engine utilizing Vector Databases and Large Language Models to index, summarize, and cross-reference multi-format historical scrolls.',
+    gotCodename: 'Scroll Weaver Matrix',
+    description: 'An intelligent semantic search engine utilizing vector indexing and advanced text algorithms to index, summarize, and cross-reference multi-format historical scrolls.',
     loreDescription: 'Built for the Archmaesters of Oldtown to extract cures for Greyscale and histories of the First Men from millions of dusty parchment pages using semantic warg-vision.',
-    techStack: ['FastAPI', 'Gemini API', 'ChromaDB', 'React', 'TypeScript'],
-    role: 'Archmaester coder (AI & RAG Engineer)',
+    techStack: ['FastAPI', 'Python', 'ChromaDB', 'React', 'TypeScript'],
+    role: 'Archmaester coder (Search & Core Engineer)',
     alliance: 'stark',
     liveUrl: '#',
     githubUrl: '#',

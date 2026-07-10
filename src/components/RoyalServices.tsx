@@ -55,11 +55,11 @@ const SERVICES_DATA: Service[] = [
     forgeDuration: '1 - 2 Moons'
   },
   {
-    id: 'ai_integration',
-    title: 'Generative AI & LLM Integration',
-    gotTitle: 'Warg Sight & Archmaester AI Spellcraft',
-    description: 'Infusing applications with smart semantic search, auto-summarization, and Gemini agent reasoning pathways.',
-    gotDescription: 'Opening the third eye of your systems. We integrate the Gemini API (Warg Minds) to read, summarize, and navigate the vast scroll archives of Oldtown with supernatural precision.',
+    id: 'smart_integration',
+    title: 'Intelligent Systems & Text Analysis',
+    gotTitle: 'Warg Sight & Archmaester Spellcraft',
+    description: 'Infusing applications with smart semantic search, auto-summarization, and advanced reasoning pathways.',
+    gotDescription: 'Opening the third eye of your systems. We integrate advanced query engines to read, summarize, and navigate the vast scroll archives of Oldtown with supernatural precision.',
     icon: Cpu,
     tier: 'Grand Archmaester Elite',
     priceTag: 'Valyrian Steel Links',

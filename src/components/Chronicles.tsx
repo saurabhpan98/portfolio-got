@@ -182,7 +182,7 @@ export const Chronicles: React.FC<ChroniclesProps> = ({ activeHouse, accentColor
         </div>
       );
     }
-    // GenAI / Dragon Egg default
+    // Dragon Egg / Ancient Sigil default
     return (
       <div 
         className="weapon-glow-container p-2 bg-red-950/20 border border-red-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(239,68,68,0.2)]"
