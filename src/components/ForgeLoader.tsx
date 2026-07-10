@@ -186,8 +186,8 @@ export const ForgeLoader: React.FC<ForgeLoaderProps> = ({ onComplete }) => {
             initial={{ rotate: -40, y: -25, x: -10 }}
             animate={{
               rotate: [-40, 15, -40],
-              y: [-25, 54, -25],
-              x: [-10, 2, -10],
+              y: [-25, 35, -25],
+              x: [-10, -15, -10],
             }}
             transition={{
               duration: 0.8,
