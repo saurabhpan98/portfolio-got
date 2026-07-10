@@ -12,6 +12,125 @@ interface ChroniclesProps {
 export const Chronicles: React.FC<ChroniclesProps> = ({ activeHouse, accentColor }) => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'frontend' | 'backend' | 'devops' | 'lore'>('all');
 
+  const renderWeaponSVG = (name: string) => {
+    const normName = name.toLowerCase();
+    if (normName.includes('react')) {
+      // War Hammer
+      return (
+        <div className="p-2 bg-amber-950/20 border border-amber-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(245,158,11,0.2)]">
+          <svg className="w-10 h-10 text-amber-500 filter drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M14.5 3h-5l-1 3.5h7z" fill="currentColor" fillOpacity="0.2" />
+            <path d="M17 6.5H7v3h10v-3z" fill="currentColor" fillOpacity="0.4" />
+            <path d="M12 9.5v11.5M10.5 21h3M12 11h-1M12 14h-1" strokeLinecap="round" />
+          </svg>
+        </div>
+      );
+    }
+    if (normName.includes('typescript')) {
+      // Valyrian Steel Longsword
+      return (
+        <div className="p-2 bg-sky-950/20 border border-sky-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(56,189,248,0.2)]">
+          <svg className="w-10 h-10 text-sky-400 filter drop-shadow-[0_0_5px_rgba(56,189,248,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M17.5 4.5l-2-2-12 12 2 2z" fill="currentColor" fillOpacity="0.2" />
+            <path d="M11.5 8.5l4 4M4.5 15.5l-2 2M6.5 17.5l-2 2" strokeLinecap="round" />
+            <circle cx="3" cy="21" r="1.5" fill="currentColor" />
+          </svg>
+        </div>
+      );
+    }
+    if (normName.includes('node') || normName.includes('express')) {
+      // Wildfire Alchemist Flask
+      return (
+        <div className="p-2 bg-green-950/20 border border-green-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(34,197,94,0.2)]">
+          <svg className="w-10 h-10 text-green-500 filter drop-shadow-[0_0_6px_rgba(34,197,94,0.6)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M8.5 2h7M12 2v6M12 11c3.866 0 7 2.686 7 6s-3.134 6-7 6-7-2.686-7-6 3.134-6 7-6z" fill="currentColor" fillOpacity="0.2" />
+            <path d="M8 15.5c1.5 2.5 4.5 2.5 6 0" strokeLinecap="round" />
+            <circle cx="12" cy="15" r="1.5" fill="currentColor" />
+          </svg>
+        </div>
+      );
+    }
+    if (normName.includes('next') || normName.includes('vite')) {
+      // Kingsroad Longbow
+      return (
+        <div className="p-2 bg-yellow-950/20 border border-yellow-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(234,179,8,0.2)]">
+          <svg className="w-10 h-10 text-yellow-500 filter drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M4 20C12 20 20 12 20 4M20 4l-4 1M20 4l-1 4" strokeLinecap="round" />
+            <path d="M4 20h12M12 12l5 5M16 4L4 16" strokeDasharray="2 2" />
+          </svg>
+        </div>
+      );
+    }
+    if (normName.includes('tailwind')) {
+      // Aegis Shield
+      return (
+        <div className="p-2 bg-cyan-950/20 border border-cyan-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(34,211,238,0.2)]">
+          <svg className="w-10 h-10 text-cyan-400 filter drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fillOpacity="0.2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M12 6v10M9 9h6M10 12h4" strokeLinecap="round" />
+          </svg>
+        </div>
+      );
+    }
+    if (normName.includes('postgresql') || normName.includes('mongodb') || normName.includes('sql') || normName.includes('database')) {
+      // Heavy Battleaxe
+      return (
+        <div className="p-2 bg-stone-950/20 border border-stone-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(150,150,150,0.2)]">
+          <svg className="w-10 h-10 text-stone-300 filter drop-shadow-[0_0_5px_rgba(209,213,219,0.4)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M12 2v20M12 5c3-1.5 5.5-1 5.5 2S15 11.5 12 10M12 5c-3-1.5-5.5-1-5.5 2S9 11.5 12 10" fill="currentColor" fillOpacity="0.2" strokeLinecap="round" />
+            <path d="M12 13c2.5-1 4.5-0.5 4.5 1.5s-2 3.5-4.5 3M12 13c-2.5-1-4.5-0.5-4.5 1.5s2 3.5 4.5 3" fill="currentColor" fillOpacity="0.2" strokeLinecap="round" />
+          </svg>
+        </div>
+      );
+    }
+    if (normName.includes('docker') || normName.includes('kubernetes')) {
+      // Iron Crossbow
+      return (
+        <div className="p-2 bg-blue-950/20 border border-blue-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(96,165,250,0.2)]">
+          <svg className="w-10 h-10 text-blue-400 filter drop-shadow-[0_0_5px_rgba(96,165,250,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M4 12h16M12 4v16M8 8l-4 4 4 4M16 8l4 4-4 4" strokeLinecap="round" />
+            <path d="M6 12C6 8.5 18 8.5 18 12" strokeDasharray="3 3" />
+            <rect x="10" y="2" width="4" height="4" rx="1" fill="currentColor" fillOpacity="0.3" />
+          </svg>
+        </div>
+      );
+    }
+    if (normName.includes('pipeline') || normName.includes('ci/cd')) {
+      // Royal Sentinel Spear
+      return (
+        <div className="p-2 bg-orange-950/20 border border-orange-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(251,146,60,0.2)]">
+          <svg className="w-10 h-10 text-orange-400 filter drop-shadow-[0_0_5px_rgba(251,146,60,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M3 21l18-18M18 3l3 3M15 9l-4-4" strokeLinecap="round" />
+            <path d="M19 5l-4-1.5-4 4L15 11l4-4-1.5-4z" fill="currentColor" fillOpacity="0.2" />
+            <path d="M5 19l-2 2 1-3" strokeLinecap="round" />
+          </svg>
+        </div>
+      );
+    }
+    if (normName.includes('python') || normName.includes('fastapi')) {
+      // Dragonglass Stiletto (Dagger)
+      return (
+        <div className="p-2 bg-purple-950/20 border border-purple-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(192,132,252,0.2)]">
+          <svg className="w-10 h-10 text-purple-400 filter drop-shadow-[0_0_5px_rgba(192,132,252,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M4 20l3 1 14-14-3-3L4 18l1.5 1.5z" fill="currentColor" fillOpacity="0.2" />
+            <path d="M10 8l3 3M6 15l1.5 1.5" strokeLinecap="round" />
+            <path d="M4 20l-2 2" strokeLinecap="round" />
+          </svg>
+        </div>
+      );
+    }
+    // GenAI / Dragon Egg default
+    return (
+      <div className="p-2 bg-red-950/20 border border-red-500/30 rounded-lg flex items-center justify-center shrink-0 shadow-[inset_0_0_8px_rgba(239,68,68,0.2)]">
+        <svg className="w-10 h-10 text-red-500 filter drop-shadow-[0_0_6px_rgba(239,68,68,0.6)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M12 2C8.5 2 5 7 5 13s3 9 7 9 7-3 7-9-3.5-11-7-11z" fill="currentColor" fillOpacity="0.3" />
+          <path d="M12 5c-1.5 2-2 4.5-2 7s1 5 2 7M12 5c1.5 2 2 4.5 2 7s-1 5-2 7" strokeLinecap="round" />
+          <path d="M7 13c1.5-.5 3.5-.5 5 0M12 13c1.5-.5 3.5-.5 5 0" strokeLinecap="round" />
+        </svg>
+      </div>
+    );
+  };
+
   const filteredSkills = activeCategory === 'all' 
     ? SKILLS 
     : SKILLS.filter(s => s.category === activeCategory);
@@ -145,26 +264,31 @@ export const Chronicles: React.FC<ChroniclesProps> = ({ activeHouse, accentColor
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-stone-950/40 border border-stone-900 rounded-md p-4 flex flex-col md:flex-row md:items-center justify-between gap-4"
+                  className="bg-stone-950/40 border border-stone-900 rounded-md p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-gold/30 transition-all duration-300"
                 >
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between md:justify-start gap-3">
-                      <h4 className="font-display text-sm md:text-base font-bold text-stone-100 tracking-wide uppercase">
-                        {skill.name}
-                      </h4>
-                      <span 
-                        className="font-mono text-[10px] px-2 py-0.5 rounded uppercase border bg-stone-900/60"
-                        style={{ borderColor: `${accentColor}30`, color: accentColor }}
-                      >
-                        {skill.category}
-                      </span>
-                    </div>
-                    {/* GoT Analog */}
-                    <div className="flex items-center gap-1 mt-1">
-                      <Sparkles className="w-3 h-3 text-gold opacity-60" />
-                      <p className="font-sans italic text-xs md:text-sm text-gold-hover">
-                        GoT Analog: <span className="font-bold">{skill.gotAnalog}</span>
-                      </p>
+                  <div className="flex items-center gap-4 flex-1">
+                    {/* Visual weapon element */}
+                    {renderWeaponSVG(skill.name)}
+
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h4 className="font-display text-sm md:text-base font-bold text-stone-100 tracking-wide uppercase">
+                          {skill.name}
+                        </h4>
+                        <span 
+                          className="font-mono text-[9px] px-2 py-0.5 rounded uppercase border bg-stone-900/60"
+                          style={{ borderColor: `${accentColor}30`, color: accentColor }}
+                        >
+                          {skill.category}
+                        </span>
+                      </div>
+                      {/* GoT Analog */}
+                      <div className="flex items-center gap-1 mt-1">
+                        <Sparkles className="w-3 h-3 text-gold opacity-60" />
+                        <p className="font-sans italic text-xs md:text-sm text-gold-hover">
+                          GoT Analog: <span className="font-bold">{skill.gotAnalog}</span>
+                        </p>
+                      </div>
                     </div>
                   </div>
 

@@ -13,6 +13,9 @@ import { LordsTestimonials } from './components/LordsTestimonials';
 import { Rookery } from './components/Rookery';
 import { DrogonFire } from './components/DrogonFire';
 import { NightKingRealm } from './components/NightKingRealm';
+import { ForgeLoader } from './components/ForgeLoader';
+import { RealmMap } from './components/RealmMap';
+import { WeatherOverlay } from './components/WeatherOverlay';
 import { Shield, Map, Compass, BookOpen, Send, Quote, Sparkles, Volume2, VolumeX, Snowflake } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -30,6 +33,8 @@ export default function App() {
   const [punIndex, setPunIndex] = useState(0);
   const [isSoundMuted, setIsSoundMuted] = useState(true);
   const [isWinterActive, setIsWinterActive] = useState(false);
+  const [isForging, setIsForging] = useState(true);
+  const [currentSection, setCurrentSection] = useState('hero-great-hall');
 
   const playWinterHowl = () => {
     if (isSoundMuted) return;
@@ -139,6 +144,47 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Track current section for weather effects
+  useEffect(() => {
+    const sections = [
+      'hero-great-hall',
+      'house-selector-section',
+      'chronicles-section',
+      'services-section',
+      'campaigns-section',
+      'achievements-section',
+      'projects-section',
+      'github-analytics-section',
+      'reviews-section',
+      'contact-section'
+    ];
+
+    const handleScroll = () => {
+      let closestSection = 'hero-great-hall';
+      let minDistance = Infinity;
+
+      sections.forEach((secId) => {
+        const el = document.getElementById(secId);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // Distance to top of screen with threshold offset
+          const distance = Math.abs(rect.top);
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestSection = secId;
+          }
+        }
+      });
+
+      setCurrentSection(closestSection);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // initial call
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const currentHouseInfo = HOUSES.find((h) => h.id === activeHouse) || HOUSES[0];
 
   const handleSelectHouse = (houseId: HouseType) => {
@@ -177,6 +223,10 @@ export default function App() {
     }
   };
 
+  if (isForging) {
+    return <ForgeLoader onComplete={() => setIsForging(false)} />;
+  }
+
   return (
     <div 
       className={`w-full overflow-x-hidden min-h-screen stone-texture text-stone-200 font-sans transition-all duration-1000 bg-gradient-to-b ${currentHouseInfo.bgGradient}`}
@@ -184,6 +234,9 @@ export default function App() {
         scrollbarColor: `${currentHouseInfo.primaryColor} #020617`
       }}
     >
+      {/* Scroll-based atmospheric weather overlay */}
+      <WeatherOverlay currentSection={currentSection} />
+
       <AnimatePresence mode="wait">
         {!isWinterActive ? (
           <motion.div
@@ -235,6 +288,12 @@ export default function App() {
                     className="px-1.5 py-1 md:px-2 md:py-1.5 text-stone-400 hover:text-white hover:border-b border-gold cursor-pointer transition-colors"
                   >
                     Pledge Fealty
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('realm-map-section')}
+                    className="px-1.5 py-1 md:px-2 md:py-1.5 text-stone-400 hover:text-white hover:border-b border-gold cursor-pointer transition-colors"
+                  >
+                    Realm Map
                   </button>
                   <button
                     onClick={() => scrollToSection('chronicles-section')}
@@ -322,6 +381,21 @@ export default function App() {
                 activeHouse={activeHouse} 
                 onSelectHouse={handleSelectHouse} 
               />
+
+              {/* Interactive Realm Map Section */}
+              <section id="realm-map-section" className="w-full max-w-5xl mx-auto px-4 py-16 border-b border-stone-800/40 relative">
+                <div className="text-center mb-10">
+                  <span className="sub-title-label block mb-2">Cartography of Code</span>
+                  <h3 className="bold-header-title text-2xl md:text-3xl lg:text-4xl tracking-[0.12em] uppercase font-bold">
+                    THE INTERACTIVE REALM MAP
+                  </h3>
+                  <p className="font-sans text-xs md:text-sm text-stone-400 max-w-xl mx-auto mt-2 italic leading-relaxed">
+                    Traverse the custom provinces of Saurabh Panchal. Click any geographic territory on the parchment map below to ride your swift steed straight to its corresponding keep.
+                  </p>
+                  <div className="ornamental-line" />
+                </div>
+                <RealmMap onNavigate={scrollToSection} />
+              </section>
 
               {/* Crenellated castle wall border spacer */}
               <div className="w-full h-8 flex justify-center items-center opacity-10 py-6">
