@@ -33,12 +33,25 @@ const GOT_PUNS = [
 export default function App() {
   const [activeHouse, setActiveHouse] = useState<HouseType>('targaryen');
   const [punIndex, setPunIndex] = useState(0);
-  const [isSoundMuted, setIsSoundMuted] = useState(true);
+  const [isSoundMuted, setIsSoundMuted] = useState(() => {
+    try {
+      const saved = localStorage.getItem('saurabh-sound-muted');
+      return saved === null ? true : saved === 'true';
+    } catch (e) {
+      return true;
+    }
+  });
   const [isWinterActive, setIsWinterActive] = useState(false);
   const [isEnteringWinter, setIsEnteringWinter] = useState(false);
   const [isMelting, setIsMelting] = useState(false);
   const [isForging, setIsForging] = useState(true);
   const [currentSection, setCurrentSection] = useState('hero-great-hall');
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('saurabh-sound-muted', String(isSoundMuted));
+    } catch (e) {}
+  }, [isSoundMuted]);
 
   const playWinterHowl = () => {
     if (isSoundMuted) return;
@@ -256,7 +269,7 @@ export default function App() {
   };
 
   if (isForging) {
-    return <ForgeLoader onComplete={() => setIsForging(false)} />;
+    return <ForgeLoader isSoundMuted={isSoundMuted} setIsSoundMuted={setIsSoundMuted} onComplete={() => setIsForging(false)} />;
   }
 
   return (

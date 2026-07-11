@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Flame, Hammer, Sparkles } from 'lucide-react';
+import { Flame, Hammer, Sparkles, Volume2, VolumeX } from 'lucide-react';
 
 interface ForgeLoaderProps {
+  isSoundMuted: boolean;
+  setIsSoundMuted: (muted: boolean) => void;
   onComplete: () => void;
 }
 
-export const ForgeLoader: React.FC<ForgeLoaderProps> = ({ onComplete }) => {
+export const ForgeLoader: React.FC<ForgeLoaderProps> = ({ isSoundMuted, setIsSoundMuted, onComplete }) => {
   const [progress, setProgress] = useState(0);
   const [statusText, setStatusText] = useState('Kindling the embers...');
   const [sparkCount, setSparkCount] = useState<number>(0);
   const [sparks, setSparks] = useState<{ id: number; angle: number; speed: number; size: number }[]>([]);
+
+  const isMutedRef = useRef(isSoundMuted);
+  useEffect(() => {
+    isMutedRef.current = isSoundMuted;
+  }, [isSoundMuted]);
 
   // Periodically change the status text and progress
   useEffect(() => {
@@ -46,6 +53,24 @@ export const ForgeLoader: React.FC<ForgeLoaderProps> = ({ onComplete }) => {
     return () => clearInterval(timer);
   }, [onComplete]);
 
+  // Click anywhere to try and resume audio context (helps unblock audio)
+  useEffect(() => {
+    const handleDocumentClick = () => {
+      // Create a dummy node and play to unblock the page
+      try {
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioContext) {
+          const dummyCtx = new AudioContext();
+          if (dummyCtx.state === 'suspended') {
+            dummyCtx.resume();
+          }
+        }
+      } catch (e) {}
+    };
+    window.addEventListener('click', handleDocumentClick);
+    return () => window.removeEventListener('click', handleDocumentClick);
+  }, []);
+
   // Periodic Hammer strikes and spark emission
   useEffect(() => {
     const strikeInterval = setInterval(() => {
@@ -59,30 +84,38 @@ export const ForgeLoader: React.FC<ForgeLoaderProps> = ({ onComplete }) => {
       setSparks(newSparks);
       setSparkCount(prev => prev + 1);
 
-      // Audio forge clink if allowed (we can do a subtle synthesize)
-      try {
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-        if (AudioContext) {
-          const ctx = new AudioContext();
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          
-          osc.type = 'sine';
-          // High-pitch metal clink frequency
-          osc.frequency.setValueAtTime(1400, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.15);
-          
-          gain.gain.setValueAtTime(0.04, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
-          
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          
-          osc.start();
-          osc.stop(ctx.currentTime + 0.2);
+      // Audio forge clink if allowed
+      if (!isMutedRef.current) {
+        try {
+          const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+          if (AudioContext) {
+            const ctx = new AudioContext();
+            
+            // Resume context if suspended (common in browsers)
+            if (ctx.state === 'suspended') {
+              ctx.resume();
+            }
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.type = 'sine';
+            // High-pitch metal clink frequency
+            osc.frequency.setValueAtTime(1400, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.15);
+            
+            gain.gain.setValueAtTime(0.04, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.start();
+            osc.stop(ctx.currentTime + 0.2);
+          }
+        } catch (err) {
+          // No audio context support or blocked by browser autoplays
         }
-      } catch (err) {
-        // No audio context support or blocked by browser autoplays
       }
     }, 800);
 
@@ -92,6 +125,30 @@ export const ForgeLoader: React.FC<ForgeLoaderProps> = ({ onComplete }) => {
   return (
     <div className="fixed inset-0 bg-stone-950 flex flex-col items-center justify-center z-50 overflow-hidden font-sans select-none">
       
+      {/* Absolute top-right Sound Control Button for user interaction */}
+      <div className="absolute top-6 right-6 z-50 flex items-center gap-2">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsSoundMuted(!isSoundMuted);
+          }}
+          className="px-3 py-1.5 border border-stone-800 hover:border-amber-500 bg-stone-900/80 hover:bg-stone-900 rounded text-stone-400 hover:text-amber-400 cursor-pointer transition-all flex items-center gap-2 text-xs uppercase tracking-wider font-mono"
+          title={isSoundMuted ? 'Unlock Forge Sound Effects' : 'Mute Sound Effects'}
+        >
+          {isSoundMuted ? (
+            <>
+              <VolumeX className="w-4 h-4" />
+              <span>Sound Off</span>
+            </>
+          ) : (
+            <>
+              <Volume2 className="w-4 h-4 text-amber-400 animate-pulse" />
+              <span className="text-amber-400 font-bold">Sound On</span>
+            </>
+          )}
+        </button>
+      </div>
+
       {/* Background ambient red/orange glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.12)_0%,transparent_70%)] pointer-events-none" />
       
