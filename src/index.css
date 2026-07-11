@@ -341,3 +341,30 @@ html, body, #root {
   border-color: var(--weapon-glow-color, #d4af37) !important;
   background-color: var(--weapon-glow-bg, rgba(212, 175, 55, 0.1)) !important;
 }
+
+/* Wall of North Cinematic Transition helpers */
+@keyframes wiggle {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-3px, -2px) rotate(-0.3deg); }
+  20% { transform: translate(3px, 2px) rotate(0.3deg); }
+  30% { transform: translate(-2px, 3px) rotate(0deg); }
+  40% { transform: translate(2px, -3px) rotate(0.3deg); }
+  50% { transform: translate(-3px, 2px) rotate(-0.3deg); }
+  60% { transform: translate(3px, -2px) rotate(0deg); }
+  70% { transform: translate(-2px, -2px) rotate(0.3deg); }
+  80% { transform: translate(2px, 3px) rotate(-0.3deg); }
+  90% { transform: translate(-3px, -2px) rotate(0deg); }
+}
+
+.animate-wiggle {
+  animation: wiggle 0.1s infinite;
+}
+
+.clip-icicle {
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.7), 0 0 20px rgba(34, 211, 238, 0.4);
+}
+

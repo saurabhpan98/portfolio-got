@@ -16,6 +16,8 @@ import { NightKingRealm } from './components/NightKingRealm';
 import { ForgeLoader } from './components/ForgeLoader';
 import { RealmMap } from './components/RealmMap';
 import { WeatherOverlay } from './components/WeatherOverlay';
+import { TheWallTransition } from './components/TheWallTransition';
+import { MeltWinterTransition } from './components/MeltWinterTransition';
 import { Shield, Map, Compass, BookOpen, Send, Quote, Sparkles, Volume2, VolumeX, Snowflake } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -33,6 +35,8 @@ export default function App() {
   const [punIndex, setPunIndex] = useState(0);
   const [isSoundMuted, setIsSoundMuted] = useState(true);
   const [isWinterActive, setIsWinterActive] = useState(false);
+  const [isEnteringWinter, setIsEnteringWinter] = useState(false);
+  const [isMelting, setIsMelting] = useState(false);
   const [isForging, setIsForging] = useState(true);
   const [currentSection, setCurrentSection] = useState('hero-great-hall');
 
@@ -100,40 +104,68 @@ export default function App() {
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContext();
       
-      const osc1 = ctx.createOscillator();
-      const osc2 = ctx.createOscillator();
-      const gain = ctx.createGain();
+      // We generate a roaring flame sound
+      const oscRoar = ctx.createOscillator();
+      const gainRoar = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
       
-      osc1.type = 'triangle';
-      osc1.frequency.setValueAtTime(329.63, ctx.currentTime);
-      osc1.frequency.linearRampToValueAtTime(440.00, ctx.currentTime + 1.5);
+      oscRoar.type = 'sawtooth';
+      oscRoar.frequency.setValueAtTime(75, ctx.currentTime);
+      oscRoar.frequency.linearRampToValueAtTime(125, ctx.currentTime + 1.2);
+      oscRoar.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 2.5);
       
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(196.00, ctx.currentTime);
-      osc2.frequency.linearRampToValueAtTime(220.00, ctx.currentTime + 1.5);
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(250, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 1.0);
+      filter.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 2.5);
+
+      gainRoar.gain.setValueAtTime(0.18, ctx.currentTime);
+      gainRoar.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
       
-      gain.gain.setValueAtTime(0.12, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.8);
+      oscRoar.connect(filter);
+      filter.connect(gainRoar);
+      gainRoar.connect(ctx.destination);
       
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(ctx.destination);
-      
-      osc1.start();
-      osc2.start();
-      osc1.stop(ctx.currentTime + 1.8);
-      osc2.stop(ctx.currentTime + 1.8);
-    } catch (e) {}
+      oscRoar.start();
+      oscRoar.stop(ctx.currentTime + 2.5);
+
+      // Crackles / Ice shattering pop sounds!
+      for (let i = 0; i < 12; i++) {
+        const time = ctx.currentTime + Math.random() * 2.0;
+        const popOsc = ctx.createOscillator();
+        const popGain = ctx.createGain();
+        popOsc.type = 'sine';
+        popOsc.frequency.setValueAtTime(900 + Math.random() * 1100, time);
+        popGain.gain.setValueAtTime(0.12, time);
+        popGain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+        popOsc.connect(popGain);
+        popGain.connect(ctx.destination);
+        popOsc.start(time);
+        popOsc.stop(time + 0.1);
+      }
+    } catch (err) {}
   };
 
   const handleActivateWinter = () => {
+    if (isEnteringWinter) return;
     playWinterHowl();
-    setIsWinterActive(true);
+    setIsEnteringWinter(true);
   };
 
   const handleMeltWinter = () => {
+    if (isMelting) return;
+    setIsMelting(true);
     playMeltCrackle();
-    setIsWinterActive(false);
+    
+    // Disable winter active exactly halfway through the screen flame sweep
+    setTimeout(() => {
+      setIsWinterActive(false);
+    }, 1300);
+
+    // Reset melting state once flames finish sweeping
+    setTimeout(() => {
+      setIsMelting(false);
+    }, 2800);
   };
 
   // Rotate puns periodically
@@ -536,6 +568,28 @@ export default function App() {
           <div className="absolute inset-0 rounded-full border border-cyan-400/20 animate-ping opacity-60 pointer-events-none" />
         </motion.button>
       )}
+
+      {/* Screen-wide Fire Flames Melt Transition */}
+      <AnimatePresence>
+        {isMelting && (
+          <MeltWinterTransition
+            isSoundMuted={isSoundMuted}
+            onComplete={() => setIsWinterActive(false)}
+            onClose={() => setIsMelting(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Cinematic Massive Wall of North Gate Opening Transition */}
+      <AnimatePresence>
+        {isEnteringWinter && (
+          <TheWallTransition
+            isSoundMuted={isSoundMuted}
+            onComplete={() => setIsWinterActive(true)}
+            onClose={() => setIsEnteringWinter(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
