@@ -107,6 +107,9 @@ export const DrogonFire: React.FC<DrogonFireProps> = ({ activeHouse, isSoundMute
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       if (!AudioContext) return;
       const ctx = new AudioContext();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
 
       // We synthesis low frequency rumble + bandpass filtered brown noise for fiery breath
       const bufferSize = ctx.sampleRate * 2; // 2 seconds

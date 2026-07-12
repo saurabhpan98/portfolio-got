@@ -64,6 +64,9 @@ export const TheWallTransition: React.FC<TheWallTransitionProps> = ({
     try {
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContext();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
 
       // 1. Deep rumble - Dual low oscillators for beating effect
       const osc1 = ctx.createOscillator();

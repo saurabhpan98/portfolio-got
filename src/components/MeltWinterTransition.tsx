@@ -29,18 +29,13 @@ export const MeltWinterTransition: React.FC<MeltWinterTransitionProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [phase, setPhase] = useState<'igniting' | 'sweeping' | 'cooling' | 'done'>('igniting');
-  
-  // Animation state for SVG Heat Distortion filter
-  const [distortionScale, setDistortionScale] = useState(0);
-  const [distortionFreq, setDistortionFreq] = useState(0.015);
+
+  // Direct element references to bypass React state updates at 60fps
+  const turbulenceRef = useRef<SVGFETurbulenceElement | null>(null);
+  const displacementRef = useRef<SVGFEDisplacementMapElement | null>(null);
+  const filterOverlayRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // Stage timings
-    // 1. Heat begins: 0s - 0.5s (Igniting)
-    // 2. Heavy sweep: 0.5s - 1.8s (Sweeping) -> Trigger state change at 1.3s
-    // 3. Cooling down: 1.8s - 2.8s (Cooling)
-    // 4. Closed: 2.8s (Done)
-
     let startTime = Date.now();
     let animationFrameId: number;
 
@@ -61,11 +56,10 @@ export const MeltWinterTransition: React.FC<MeltWinterTransitionProps> = ({
 
     // Particle manager
     const particles: Particle[] = [];
-    const maxParticles = 180;
+    const maxParticles = 120; // Reduced for performance optimization
 
     const spawnParticle = (yPos: number, isInitialBurst = false) => {
       const w = window.innerWidth;
-      const h = window.innerHeight;
       const x = Math.random() * w;
       
       const typeRand = Math.random();
@@ -112,9 +106,11 @@ export const MeltWinterTransition: React.FC<MeltWinterTransitionProps> = ({
     };
 
     // Pre-populate particles for immediate action
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 30; i++) {
       spawnParticle(window.innerHeight * Math.random(), true);
     }
+
+    let localPhase: 'igniting' | 'sweeping' | 'cooling' | 'done' = 'igniting';
 
     // Audio-visual synchronized state loop
     const tick = () => {
@@ -122,35 +118,63 @@ export const MeltWinterTransition: React.FC<MeltWinterTransitionProps> = ({
       const w = window.innerWidth;
       const h = window.innerHeight;
 
-      // Animate heat distortion values smoothly over time
+      let scale = 0;
+      let freq = 0.015;
+
+      // Track phases and update React state only when phase changes
       if (elapsed < 0.6) {
-        setPhase('igniting');
-        // Distortion starts growing
-        setDistortionScale(elapsed * 120); // up to 72
-        setDistortionFreq(0.01 + elapsed * 0.015);
+        if (localPhase !== 'igniting') {
+          localPhase = 'igniting';
+          setPhase('igniting');
+        }
+        scale = elapsed * 120;
+        freq = 0.01 + elapsed * 0.015;
       } else if (elapsed < 1.8) {
-        setPhase('sweeping');
-        // Distortion peaks and oscillates intensely
-        setDistortionScale(72 + Math.sin(elapsed * 25) * 15);
-        setDistortionFreq(0.025 + Math.cos(elapsed * 12) * 0.005);
+        if (localPhase !== 'sweeping') {
+          localPhase = 'sweeping';
+          setPhase('sweeping');
+        }
+        scale = 72 + Math.sin(elapsed * 25) * 15;
+        freq = 0.025 + Math.cos(elapsed * 12) * 0.005;
       } else if (elapsed < 2.8) {
-        setPhase('cooling');
-        // Dissipating
+        if (localPhase !== 'cooling') {
+          localPhase = 'cooling';
+          setPhase('cooling');
+        }
         const coolingRatio = (2.8 - elapsed) / 1.0;
-        setDistortionScale(72 * coolingRatio);
-        setDistortionFreq(0.01 + 0.015 * coolingRatio);
+        scale = 72 * coolingRatio;
+        freq = 0.01 + 0.015 * coolingRatio;
       } else {
-        setPhase('done');
+        if (localPhase !== 'done') {
+          localPhase = 'done';
+          setPhase('done');
+        }
+      }
+
+      // 1. Direct DOM mutation of the heavy SVG filter elements (bypasses React virtual DOM rendering)
+      if (turbulenceRef.current) {
+        turbulenceRef.current.setAttribute('baseFrequency', `${freq} ${freq * 1.5}`);
+      }
+      if (displacementRef.current) {
+        displacementRef.current.setAttribute('scale', String(scale));
+      }
+      if (filterOverlayRef.current) {
+        if (scale > 2) {
+          filterOverlayRef.current.style.filter = 'url(#melt-heat-distortion)';
+          filterOverlayRef.current.style.backdropFilter = `blur(${Math.min(8, scale / 8)}px)`;
+        } else {
+          filterOverlayRef.current.style.filter = 'none';
+          filterOverlayRef.current.style.backdropFilter = 'none';
+        }
       }
 
       // Clear Canvas
       ctx.clearRect(0, 0, w, h);
 
       // Spawn new fire particles according to active phases
-      const spawnRate = phase === 'sweeping' ? 6 : phase === 'igniting' ? 3 : 1;
-      if (particles.length < maxParticles && phase !== 'done') {
+      const spawnRate = localPhase === 'sweeping' ? 5 : localPhase === 'igniting' ? 2 : 1;
+      if (particles.length < maxParticles && localPhase !== 'done') {
         for (let s = 0; s < spawnRate; s++) {
-          // Fire originates from bottom during sweep, or scattered bursts
           const spawnY = h + 10;
           spawnParticle(spawnY);
         }
@@ -175,28 +199,31 @@ export const MeltWinterTransition: React.FC<MeltWinterTransitionProps> = ({
         ctx.globalAlpha = p.alpha;
         
         if (p.type === 'spark') {
-          // Sparkling glows
-          const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2.5);
-          gradient.addColorStop(0, '#fffbeb'); // White core
-          gradient.addColorStop(0.3, '#fbbf24'); // Yellow glow
-          gradient.addColorStop(1, 'rgba(249, 115, 22, 0)'); // Transparent orange edge
-          ctx.fillStyle = gradient;
+          // Dual-circle high-performance glow simulation (replaces slow createRadialGradient!)
+          ctx.fillStyle = 'rgba(249, 115, 22, 0.2)';
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#fffbeb';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 0.9, 0, Math.PI * 2);
           ctx.fill();
         } else if (p.type === 'ember') {
-          // Red glowing embers
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = '#ef4444';
-          ctx.fillStyle = p.color;
+          // Double-circle high-performance glowing ember (replaces slow shadowBlur!)
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.3)';
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#ef4444';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 0.8, 0, Math.PI * 2);
           ctx.fill();
         } else {
-          // Floating ash flakes
+          // Floating ash flakes - simple triangles
           ctx.fillStyle = p.color;
           ctx.beginPath();
-          // Draw irregular ash triangles/quads
           const r = p.size;
           ctx.moveTo(p.x, p.y - r);
           ctx.lineTo(p.x + r * 0.8, p.y + r * 0.5);
@@ -207,7 +234,7 @@ export const MeltWinterTransition: React.FC<MeltWinterTransitionProps> = ({
         ctx.restore();
       }
 
-      if (phase !== 'done') {
+      if (localPhase !== 'done') {
         animationFrameId = requestAnimationFrame(tick);
       }
     };
@@ -229,7 +256,7 @@ export const MeltWinterTransition: React.FC<MeltWinterTransitionProps> = ({
       clearTimeout(completeTimer);
       clearTimeout(closeTimer);
     };
-  }, []);
+  }, [onComplete, onClose]);
 
   return (
     <AnimatePresence>
@@ -241,20 +268,22 @@ export const MeltWinterTransition: React.FC<MeltWinterTransitionProps> = ({
           transition={{ duration: 0.4 }}
           className="fixed inset-0 z-[110] overflow-hidden pointer-events-none"
         >
-          {/* SVG Heat Distortion filter targeting the main body container during melting */}
+          {/* SVG Heat Distortion filter - Optimized with 1 octave for extreme performance */}
           <svg className="absolute w-0 h-0">
             <defs>
               <filter id="melt-heat-distortion">
                 <feTurbulence
+                  ref={turbulenceRef}
                   type="fractalNoise"
-                  baseFrequency={`${distortionFreq} ${distortionFreq * 1.5}`}
-                  numOctaves="3"
+                  baseFrequency="0.015 0.0225"
+                  numOctaves="1"
                   result="noise"
                 />
                 <feDisplacementMap
+                  ref={displacementRef}
                   in="SourceGraphic"
                   in2="noise"
-                  scale={distortionScale}
+                  scale="0"
                   xChannelSelector="R"
                   yChannelSelector="G"
                 />
@@ -264,10 +293,11 @@ export const MeltWinterTransition: React.FC<MeltWinterTransitionProps> = ({
 
           {/* Connect the filter to the viewport backing to ripple everything */}
           <div 
-            className="absolute inset-0 bg-stone-950/10 pointer-events-none"
+            ref={filterOverlayRef}
+            className="absolute inset-0 bg-stone-950/10 pointer-events-none transition-all"
             style={{
-              filter: distortionScale > 2 ? 'url(#melt-heat-distortion)' : 'none',
-              backdropFilter: `blur(${Math.min(10, distortionScale / 6)}px)`
+              filter: 'none',
+              backdropFilter: 'none'
             }}
           />
 

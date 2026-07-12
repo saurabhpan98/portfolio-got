@@ -168,6 +168,9 @@ export const NightKingRealm: React.FC<NightKingRealmProps> = ({ isSoundMuted, on
       try {
         const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
         const ctx = new AudioContext();
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
@@ -261,6 +264,9 @@ export const NightKingRealm: React.FC<NightKingRealmProps> = ({ isSoundMuted, on
       try {
         const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
         const ctx = new AudioContext();
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
         
         // Ice shatter noise
         const bufferSize = ctx.sampleRate * 0.6; // 0.6 seconds

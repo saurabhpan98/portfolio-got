@@ -62,6 +62,9 @@ export const KeyAchievements: React.FC<KeyAchievementsProps> = ({ activeHouse, a
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       if (!AudioContext) return;
       const ctx = new AudioContext();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
       
       // Low rumble throat sound
       const osc1 = ctx.createOscillator();

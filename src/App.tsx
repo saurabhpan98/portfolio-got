@@ -58,6 +58,9 @@ export default function App() {
     try {
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContext();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
       
       const osc1 = ctx.createOscillator();
       const osc2 = ctx.createOscillator();
@@ -116,6 +119,9 @@ export default function App() {
     try {
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContext();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
       
       // We generate a roaring flame sound
       const oscRoar = ctx.createOscillator();
@@ -239,6 +245,9 @@ export default function App() {
     if (!isSoundMuted) {
       try {
         const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
         
         // Play a low medieval bell / gong tone
         const osc = ctx.createOscillator();

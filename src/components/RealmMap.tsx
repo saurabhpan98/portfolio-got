@@ -348,6 +348,9 @@ export const RealmMap: React.FC<RealmMapProps> = ({ onScrollToSection, onNavigat
                     const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
                     if (AudioContext) {
                       const ctx = new AudioContext();
+                      if (ctx.state === 'suspended') {
+                        ctx.resume();
+                      }
                       const osc = ctx.createOscillator();
                       const gain = ctx.createGain();
                       osc.type = 'triangle';
